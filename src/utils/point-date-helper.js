@@ -1,10 +1,8 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { BasePrice, DateFormat } from './const.js';
+import { BasePrice, DateFormat } from '../const.js';
 
 dayjs.extend(duration);
-
-const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
 
 const humanizeDateTime = (date) => dayjs(date).format(DateFormat.DAY_MONTH_YEAR_HOUR_MINUTE);
 
@@ -33,4 +31,4 @@ const getBasePrice = (a = BasePrice.MIN, b = BasePrice.MAX) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export { humanizeDate, humanizeTime, humanizeDateTime, getTimeDifference, getRandomArrayElement, getBasePrice };
+export { humanizeDate, humanizeTime, humanizeDateTime, getTimeDifference, getBasePrice };

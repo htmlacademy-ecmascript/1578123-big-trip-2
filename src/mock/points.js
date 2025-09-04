@@ -1,4 +1,4 @@
-import { getBasePrice, getRandomArrayElement } from '../utils.js';
+import { getBasePrice, getRandomArrayElement } from '../utils/point-date-helper.js';
 
 const points = [
   {

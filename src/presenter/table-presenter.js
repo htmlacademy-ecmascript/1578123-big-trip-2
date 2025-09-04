@@ -1,4 +1,4 @@
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 
 import PointsListView from '../view/points-list-view.js';
 import ListSortView from '../view/list-sort-view.js';
@@ -34,7 +34,7 @@ export default class TablePresenter {
       offers: this.offers,
     };
 
-    render(new PointEditView(pointEditProps), this.pointsListComponent.getElement());
+    render(new PointEditView(pointEditProps), this.pointsListComponent.element);
 
     for (let i = 1; i < this.points.length; i++) {
       const props = {
@@ -43,7 +43,7 @@ export default class TablePresenter {
         offers: this.offers,
       };
 
-      render(new PointView(props), this.pointsListComponent.getElement());
+      render(new PointView(props), this.pointsListComponent.element);
     }
   }
 }

@@ -1,6 +1,7 @@
-import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeDate, humanizeTime, getTimeDifference} from '../utils/point-date-helper.js';
 import he from 'he';
+import AbstractView from '../framework/view/abstract-view.js';
+
+import {humanizeDate, humanizeTime, getTimeDifference} from '../utils/point-date-helper.js';
 
 function createSelectedOffersTemplate (selectedOffers) {
   return selectedOffers.map(({title, price}) => (
@@ -13,7 +14,7 @@ function createSelectedOffersTemplate (selectedOffers) {
 }
 
 function createTemplate({point, destination, selectedOffers}) {
-  const { basePrice, dateFrom, dateTo, isFavorite, type} = point;
+  const {basePrice, dateFrom, dateTo, isFavorite, type} = point;
   const {name: destinationName} = destination;
 
   const humanDateFrom = humanizeDate(dateFrom);
@@ -91,6 +92,7 @@ class PointView extends AbstractView {
 
     this.#handleEditClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;
+
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#editClickHandler);
     this.element.querySelector('.event__favorite-btn')
@@ -101,7 +103,7 @@ class PointView extends AbstractView {
     return createTemplate({
       point: this.#point,
       destination: this.#destination,
-      selectedOffers: this.#selectedOffers
+      selectedOffers: this.#selectedOffers,
     });
   }
 

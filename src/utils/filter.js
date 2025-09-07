@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
-import { FilterType } from '../const.js';
+import {FilterType} from '../const.js';
 
 const isFromFuture = (date) => dayjs().isBefore(dayjs(date));
 
 const isPresent = (dateFrom, dateTo) => {
   const currentDate = dayjs();
+
   return currentDate.isBefore(dayjs(dateTo)) && currentDate.isAfter(dayjs(dateFrom));
 };
 

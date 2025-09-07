@@ -1,10 +1,10 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { DateFormat, DateUnit } from '../const.js';
+import {DATE_UNIT, DateFormat} from '../const.js';
 
 dayjs.extend(duration);
 
-const isDatesEqual = (dateA, dateB, unit = DateUnit.DAY) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, unit);
+const isDatesEqual = (dateA, dateB, unit = DATE_UNIT) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, unit);
 
 const humanizeDateTime = (date) => date ? dayjs(date).format(DateFormat.DAY_MONTH_YEAR_HOUR_MINUTE) : '';
 
@@ -30,7 +30,7 @@ const getTimeDifference = (dateFrom, dateTo) => {
     return hoursMinutesTime;
   }
 
-  const fullDaysTime = `${Math.trunc(durationData.asDays()).toString().padStart(DateFormat.PAD_LENGTH, DateFormat.PAD_SYMBOL) }D`;
+  const fullDaysTime = `${Math.trunc(durationData.asDays()).toString().padStart(DateFormat.PAD_LENGTH, DateFormat.PAD_SYMBOL)}${DateFormat.DAY_SYMBOL}`;
 
   return `${fullDaysTime} ${hoursMinutesTime}`;
 };
@@ -48,16 +48,15 @@ const sortPointsByStartDate = (pointA, pointB) => dayjs(pointA.dateFrom).diff(da
 
 const sortPointsByEndDate = (pointA, pointB) => dayjs(pointB.dateTo).diff(dayjs(pointA.dateTo));
 
-
 export {
-  getTimeDifference,
+  isDatesEqual,
   humanizeDate,
   humanizeDateTime,
   humanizeTime,
   humanizeTripInfoDates,
-  isDatesEqual,
-  sortPointsByEndDate,
+  getTimeDifference,
+  sortPointsByTime,
   sortPointsByPrice,
   sortPointsByStartDate,
-  sortPointsByTime
+  sortPointsByEndDate,
 };

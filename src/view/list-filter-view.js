@@ -12,7 +12,7 @@ function createFilterItemTemplate(filter, currentFilter) {
         name="trip-filter"
         value="${type}"
         ${type === currentFilter ? 'checked' : ''}
-        ${count === 0 ? 'disabled' : ''}
+        ${!count ? 'disabled' : ''}
       >
       <label class="trip-filters__filter-label" for="filter-${type}">
         ${type}
@@ -28,7 +28,7 @@ function createTemplate({filters, currentFilter}) {
 
   return (
     `<form class="trip-filters" action="#" method="get">
-         ${filterItemsTemplate}
+        ${filterItemsTemplate}
       <button class="visually-hidden" type="submit">Accept filter</button>
     </form>`
   );
@@ -37,6 +37,7 @@ function createTemplate({filters, currentFilter}) {
 class ListFilterView extends AbstractView {
   #filters = null;
   #currentFilter = null;
+
   #handleFilterTypeChange = null;
 
   constructor({filters, currentFilterType, onFilterTypeChange}) {
@@ -51,7 +52,7 @@ class ListFilterView extends AbstractView {
   get template() {
     return createTemplate({
       filters: this.#filters,
-      currentFilter: this.#currentFilter
+      currentFilter: this.#currentFilter,
     });
   }
 

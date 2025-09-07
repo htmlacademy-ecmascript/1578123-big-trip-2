@@ -1,17 +1,20 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
+
 import PointAddNewView from '../view/point-add-new-view.js';
+
+import {isEscapeKey} from '../utils/common.js';
 import {UserAction, UpdateType} from '../const.js';
-import { isEscapeKey } from '../utils/common.js';
 
 class NewPointPresenter {
   #pointsListContainer = null;
-  #handleDataChange = null;
-  #handleDestroy = null;
-  #handleDataRequest = null;
+
+  #pointEditComponent = null;
 
   #properties = null;
 
-  #pointEditComponent = null;
+  #handleDataChange = null;
+  #handleDestroy = null;
+  #handleDataRequest = null;
 
   constructor({pointsListContainer, onDataChange, onDestroy, onDataRequest}) {
     this.#pointsListContainer = pointsListContainer;
@@ -32,7 +35,7 @@ class NewPointPresenter {
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
       onQuitEditClick: this.#handleQuitEditClick,
-      onDataRequest: this.#handleDataRequest
+      onDataRequest: this.#handleDataRequest,
     });
 
     render(this.#pointEditComponent, this.#pointsListContainer, RenderPosition.AFTERBEGIN);
@@ -76,7 +79,7 @@ class NewPointPresenter {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      update.point
+      update.point,
     );
   };
 

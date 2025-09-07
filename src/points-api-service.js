@@ -1,20 +1,23 @@
 import ApiService from './framework/api-service.js';
-import { Method, Url } from './const.js';
+import {Method, Url} from './const.js';
 
 class PointsApiService extends ApiService {
   get points() {
-    return this._load({url: Url.POINTS})
-      .then(ApiService.parseResponse);
+    return this._load({
+      url: Url.POINTS,
+    }).then(ApiService.parseResponse);
   }
 
   get offers() {
-    return this._load({url: Url.OFFERS})
-      .then(ApiService.parseResponse);
+    return this._load({
+      url: Url.OFFERS,
+    }).then(ApiService.parseResponse);
   }
 
   get destinations() {
-    return this._load({url: Url.DESTINATIONS})
-      .then(ApiService.parseResponse);
+    return this._load({
+      url: Url.DESTINATIONS,
+    }).then(ApiService.parseResponse);
   }
 
   async updatePoint(point) {

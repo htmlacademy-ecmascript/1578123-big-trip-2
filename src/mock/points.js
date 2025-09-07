@@ -1,4 +1,4 @@
-import { getBasePrice, getRandomArrayElement } from '../utils/point-date-helper.js';
+import { getBasePrice } from '../utils/point-date-helper.js';
 
 const points = [
   {
@@ -298,8 +298,4 @@ const points = [
   }
 ];
 
-function getRandomPoint() {
-  return getRandomArrayElement(points);
-}
-
-export { getRandomPoint };
+export { points };

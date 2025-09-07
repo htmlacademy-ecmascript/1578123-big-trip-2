@@ -1,22 +1,18 @@
+const AUTHORIZATION = 'Basic LzEqsnAZcyFAhycAhjMk';
+
+const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
+
 const GAP_IN_MILLISECONDS = 3_600_000;
+
+const INVALID_BASE_PRICE_PATTERN = /\D+/;
+
+const DATE_UNIT = 'day';
 
 const DefaultPoint = {
   DATE_FROM: null,
   DATE_TO: null,
   TYPE: 'flight',
 };
-
-const BLANK_POINT = {
-  basePrice: 0,
-  dateFrom: DefaultPoint.DATE_FROM,
-  dateTo: DefaultPoint.DATE_TO,
-  destination: '',
-  isFavorite: false,
-  offers: [],
-  type: DefaultPoint.TYPE,
-};
-
-const UNVALID_BASE_PRICE_PATTERN = /\D+/;
 
 const DateFormat = {
   DAY: 'D',
@@ -28,41 +24,47 @@ const DateFormat = {
   DURATION_HOUR_MINUTE: 'HH[H] mm[M]',
   FLATPICKR_OUTPUT: 'd/m/y H:i',
   PAD_SYMBOL: '0',
-  PAD_LENGTH: 2
+  PAD_LENGTH: 2,
+  DAY_SYMBOL: 'd',
 };
 
-const DateUnit = {
-  DAY: 'day',
+const TripInfo = {
+  START: 0,
+  END: -1,
+  MAX_NAMES_COUNT: 3,
+  SEPARATOR_DATE: '&nbsp;&mdash;&nbsp;',
+  SEPARATOR_TITLE: ' &mdash; ',
+  SEPARATOR_TITLE_MAX: ' &mdash;...&mdash; ',
 };
 
 const BasePrice = {
   MIN: 1,
-  DEFAULT: 0
+  DEFAULT: 0,
 };
 
 const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
-  PAST:'past'
+  PAST:'past',
 };
 
 const NoPointsMessage = {
   [FilterType.EVERYTHING]: 'Click New Event to create your first point',
   [FilterType.PAST]: 'There are no past events now',
   [FilterType.PRESENT]: 'There are no present events now',
-  [FilterType.FUTURE]: 'There are no future events now'
-};
-
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
+  [FilterType.FUTURE]: 'There are no future events now',
 };
 
 const SortType = {
   DAY: 'day',
   TIME: 'time',
   PRICE: 'price',
+};
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
 };
 
 const UserAction = {
@@ -89,7 +91,7 @@ const Method = {
 const Url = {
   POINTS: 'points',
   OFFERS: 'offers',
-  DESTINATIONS: 'destinations'
+  DESTINATIONS: 'destinations',
 };
 
 const TimeLimit = {
@@ -97,30 +99,23 @@ const TimeLimit = {
   UPPER_LIMIT: 1000,
 };
 
-const TripInfo = {
-  START: 0,
-  END: -1,
-  MAX_NAMES_COUNT: 3,
-  SEPARATOR_DATE: '&nbsp;&mdash;&nbsp;',
-  SEPARATOR_TITLE: ' &mdash; ',
-  SEPARATOR_TITLE_MAX: ' &mdash;...&mdash; ',
-};
-
 export {
-  DateFormat,
-  BasePrice,
-  NoPointsMessage,
-  FilterType,
-  Mode,
-  SortType,
+  AUTHORIZATION,
+  END_POINT,
   GAP_IN_MILLISECONDS,
+  INVALID_BASE_PRICE_PATTERN,
+  DATE_UNIT,
+  DefaultPoint,
+  DateFormat,
+  TripInfo,
+  BasePrice,
+  FilterType,
+  NoPointsMessage,
+  SortType,
+  Mode,
   UserAction,
   UpdateType,
-  BLANK_POINT,
-  UNVALID_BASE_PRICE_PATTERN,
   Method,
   Url,
   TimeLimit,
-  DateUnit,
-  TripInfo,
 };

@@ -1,49 +1,54 @@
-import PointsModel from './model/points-model.js';
-import { render, RenderPosition } from './framework/render.js';
-import TablePresenter from './presenter/table-presenter.js';
-import FilterModel from './model/filter-model.js';
-import FilterPresenter from './presenter/filter-presenter.js';
-import NewPointButtonView from './view/new-point-button-view.js';
-import PointsApiService from './points-api-service.js';
-import TripInfoPresenter from './presenter/trip-info-presenter.js';
+import {render, RenderPosition} from './framework/render.js';
 
-const AUTHORIZATION = 'Basic IAMVerYUniquEAnDLengthY';
-const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
+import PointsModel from './model/points-model.js';
+import FilterModel from './model/filter-model.js';
+
+import TripInfoPresenter from './presenter/trip-info-presenter.js';
+import TablePresenter from './presenter/table-presenter.js';
+import FilterPresenter from './presenter/filter-presenter.js';
+
+import NewPointButtonView from './view/new-point-button-view.js';
+
+import PointsApiService from './points-api-service.js';
+import {AUTHORIZATION, END_POINT} from './const.js';
 
 const tripMainElement = document.querySelector('.trip-main');
 const filtersContainerElement = tripMainElement.querySelector('.trip-controls__filters');
 const pointsContainerElement = document.querySelector('.trip-events');
 
 const pointsModel = new PointsModel({
-  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
 });
 const filterModel = new FilterModel();
+
 const tablePresenter = new TablePresenter({
   container: pointsContainerElement,
   pointsModel,
   filterModel,
-  onNewPointDestroy: handleNewPointFormClose
+  onNewPointDestroy: handleNewPointFormClose,
 });
 const filterPresenter = new FilterPresenter({
   filterContainer: filtersContainerElement,
   filterModel,
-  pointsModel
+  pointsModel,
 });
 const tripInfoPresenter = new TripInfoPresenter({
   tripInfoContainer: tripMainElement,
-  pointsModel
+  pointsModel,
 });
 
 const newPointButtonComponent = new NewPointButtonView({
-  onClick: handleNewPointButtonClick
+  onClick: handleNewPointButtonClick,
 });
 
 function handleNewPointFormClose() {
+  tablePresenter.handleNewPointFormClose();
   newPointButtonComponent.element.disabled = false;
 }
 
 function handleNewPointButtonClick() {
   tablePresenter.createPoint();
+  tablePresenter.handleNewPointButtonClick();
   newPointButtonComponent.element.disabled = true;
 }
 

@@ -1,5 +1,5 @@
 import Observable from '../framework/observable.js';
-import { UpdateType } from '../const.js';
+import {UpdateType} from '../const.js';
 
 class PointsModel extends Observable {
   #pointsApiService = null;
@@ -33,11 +33,13 @@ class PointsModel extends Observable {
       this.#points = points.map(this.#adaptToClient);
       this.#offers = offers;
       this.#destinations = destinations;
+
       this._notify(UpdateType.INIT);
     } catch (err) {
       this.#points = [];
       this.#offers = [];
       this.#destinations = [];
+
       this._notify(UpdateType.ERROR);
     }
   }
@@ -69,6 +71,7 @@ class PointsModel extends Observable {
       const response = await this.#pointsApiService.addPoint(update);
       const newPoint = this.#adaptToClient(response);
       this.#points = [newPoint, ...this.#points];
+
       this._notify(updateType, newPoint);
     } catch(err) {
       throw new Error('Can\'t add point');
@@ -88,6 +91,7 @@ class PointsModel extends Observable {
         ...this.#points.slice(0, index),
         ...this.#points.slice(index + 1),
       ];
+
       this._notify(updateType);
     } catch(err) {
       throw new Error('Can\'t delete point');

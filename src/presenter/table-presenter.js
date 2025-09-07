@@ -1,20 +1,37 @@
-import { render, remove, RenderPosition } from '../framework/render.js';
+import {render, remove, RenderPosition} from '../framework/render.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+
+import PointPresenter from './point-presenter.js';
+import NewPointPresenter from './new-point-presenter.js';
+
 import ListSortView from '../view/list-sort-view.js';
 import PointsListView from '../view/points-list-view.js';
 import NoPointsView from '../view/no-points-view.js';
 import LoadingView from '../view/loading-view.js';
 import ErrorLoadingView from '../view/error-loading-view.js';
-import PointPresenter from './point-presenter.js';
-import { SortType, UpdateType, UserAction, FilterType, BLANK_POINT, TimeLimit } from '../const.js';
-import { sortPointsByPrice, sortPointsByStartDate, sortPointsByTime } from '../utils/point-date-helper.js';
+
+import {sortPointsByPrice, sortPointsByStartDate, sortPointsByTime} from '../utils/point-date-helper.js';
 import {filter} from '../utils/filter.js';
-import NewPointPresenter from './new-point-presenter.js';
-import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+import {SortType, UpdateType, UserAction, FilterType, DefaultPoint, TimeLimit, BasePrice} from '../const.js';
+
+const BLANK_POINT = {
+  basePrice: BasePrice.DEFAULT,
+  dateFrom: DefaultPoint.DATE_FROM,
+  dateTo: DefaultPoint.DATE_TO,
+  destination: '',
+  isFavorite: false,
+  offers: [],
+  type: DefaultPoint.TYPE,
+};
 
 class TablePresenter {
   #tableContainer = null;
+
   #pointsModel = null;
   #filterModel = null;
+
+  #pointPresenters = new Map();
+  #newPointPresenter = null;
 
   #pointsListComponent = new PointsListView();
   #loadingComponent = new LoadingView();
@@ -22,11 +39,10 @@ class TablePresenter {
   #sortComponent = null;
   #noPointsComponent = null;
 
-  #pointPresenters = new Map();
-  #newPointPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT
@@ -41,7 +57,7 @@ class TablePresenter {
       pointsListContainer: this.#pointsListComponent.element,
       onDataChange: this.#handleViewAction,
       onDataRequest: this.#handleDataRequest,
-      onDestroy: onNewPointDestroy
+      onDestroy: onNewPointDestroy,
     });
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
@@ -68,11 +84,26 @@ class TablePresenter {
 
   createPoint() {
     this.#currentSortType = SortType.DEFAULT;
+
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+
     this.#newPointPresenter.init({
       point: BLANK_POINT,
-      extraData: this.#handleDataRequest(BLANK_POINT)
+      extraData: this.#handleDataRequest(BLANK_POINT),
     });
+  }
+
+  handleNewPointButtonClick() {
+    if(this.points.length === 0) {
+      remove(this.#noPointsComponent);
+      this.#noPointsComponent = null;
+    }
+  }
+
+  handleNewPointFormClose() {
+    if(this.points.length === 0) {
+      this.#renderNoPoints();
+    }
   }
 
   #handleModeChange = () => {
@@ -118,7 +149,7 @@ class TablePresenter {
       case UpdateType.PATCH:
         this.#pointPresenters.get(point.id).init({
           point,
-          extraData: this.#handleDataRequest(point)
+          extraData: this.#handleDataRequest(point),
         });
         break;
       case UpdateType.MINOR:
@@ -126,7 +157,9 @@ class TablePresenter {
         this.#renderTable();
         break;
       case UpdateType.MAJOR:
-        this.#clearTable({resetSortType: true});
+        this.#clearTable({
+          resetSortType: true,
+        });
         this.#renderTable();
         break;
       case UpdateType.INIT:
@@ -147,7 +180,7 @@ class TablePresenter {
     pointTypes: this.#pointsModel.getPointTypes(),
     destination: this.#pointsModel.getDestinationById(point?.destination),
     availableOffers: this.#pointsModel.getOffersByType(point?.type),
-    selectedOffers: this.#pointsModel.getOffersByIds(point?.offers)
+    selectedOffers: this.#pointsModel.getOffersByIds(point?.offers),
   });
 
   #renderPoint(properties) {
@@ -155,16 +188,17 @@ class TablePresenter {
       pointsListContainer: this.#pointsListComponent.element,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
-      onDataRequest: this.#handleDataRequest
+      onDataRequest: this.#handleDataRequest,
     });
 
     pointPresenter.init(properties);
+
     this.#pointPresenters.set(properties.point.id, pointPresenter);
   }
 
   #renderNoPoints() {
     this.#noPointsComponent = new NoPointsView({
-      filterType: this.#filterType
+      filterType: this.#filterType,
     });
 
     render(this.#noPointsComponent, this.#tableContainer);
@@ -176,6 +210,7 @@ class TablePresenter {
     }
 
     this.#currentSortType = sortType;
+
     this.#clearTable();
     this.#renderTable();
   };
@@ -183,8 +218,9 @@ class TablePresenter {
   #renderSort() {
     this.#sortComponent = new ListSortView({
       currentSortType: this.#currentSortType,
-      onSortTypeChange: this.#handleSortTypeChange
+      onSortTypeChange: this.#handleSortTypeChange,
     });
+
     render(this.#sortComponent, this.#tableContainer, RenderPosition.AFTERBEGIN);
   }
 
@@ -192,7 +228,7 @@ class TablePresenter {
     this.points.forEach((point) => {
       this.#renderPoint({
         point,
-        extraData: this.#handleDataRequest(point)
+        extraData: this.#handleDataRequest(point),
       });
     });
   }

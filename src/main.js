@@ -1,10 +1,14 @@
 import {render, RenderPosition} from './framework/render.js';
+
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
+
 import TripInfoPresenter from './presenter/trip-info-presenter.js';
 import TablePresenter from './presenter/table-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
+
 import NewPointButtonView from './view/new-point-button-view.js';
+
 import PointsApiService from './points-api-service.js';
 import {AUTHORIZATION, END_POINT} from './const.js';
 

@@ -1,14 +1,18 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { BasePrice, DateFormat } from '../const.js';
+import { DateFormat, DateUnit } from '../const.js';
 
 dayjs.extend(duration);
 
-const humanizeDateTime = (date) => dayjs(date).format(DateFormat.DAY_MONTH_YEAR_HOUR_MINUTE);
+const isDatesEqual = (dateA, dateB, unit = DateUnit.DAY) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, unit);
+
+const humanizeDateTime = (date) => date ? dayjs(date).format(DateFormat.DAY_MONTH_YEAR_HOUR_MINUTE) : '';
 
 const humanizeDate = (date) => dayjs(date).format(DateFormat.MONTH_DAY);
 
 const humanizeTime = (date) => dayjs(date).format(DateFormat.HOUR_MINUTE);
+
+const humanizeTripInfoDates = (dates) => dates.map((date) => dayjs(date).format(DateFormat.DAY_MONTH));
 
 const getTimeDifference = (dateFrom, dateTo) => {
   const date1 = dayjs(dateFrom);
@@ -20,18 +24,15 @@ const getTimeDifference = (dateFrom, dateTo) => {
     return durationData.format(DateFormat.DURATION_MINUTE);
   }
 
+  const hoursMinutesTime = durationData.format(DateFormat.DURATION_HOUR_MINUTE);
+
   if (durationData.asDays() < 1) {
-    return durationData.format(DateFormat.DURATION_HOUR_MINUTE);
+    return hoursMinutesTime;
   }
 
-  return durationData.format(DateFormat.DURATION_DAY_HOUR_MINUTE);
-};
+  const fullDaysTime = `${Math.trunc(durationData.asDays()).toString().padStart(DateFormat.PAD_LENGTH, DateFormat.PAD_SYMBOL) }D`;
 
-const getBasePrice = (a = BasePrice.MIN, b = BasePrice.MAX) => {
-  const min = Math.ceil(Math.min(a, b));
-  const max = Math.floor(Math.max(a, b));
-
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return `${fullDaysTime} ${hoursMinutesTime}`;
 };
 
 const sortPointsByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
@@ -45,6 +46,18 @@ const sortPointsByTime = (pointA, pointB) => {
 
 const sortPointsByStartDate = (pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
 
-const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+const sortPointsByEndDate = (pointA, pointB) => dayjs(pointB.dateTo).diff(dayjs(pointA.dateTo));
 
-export { humanizeDate, humanizeTime, humanizeDateTime, getTimeDifference, getBasePrice, sortPointsByPrice, sortPointsByTime, sortPointsByStartDate, isDatesEqual };
+
+export {
+  getTimeDifference,
+  humanizeDate,
+  humanizeDateTime,
+  humanizeTime,
+  humanizeTripInfoDates,
+  isDatesEqual,
+  sortPointsByEndDate,
+  sortPointsByPrice,
+  sortPointsByStartDate,
+  sortPointsByTime
+};

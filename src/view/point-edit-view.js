@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeDateTime } from '../utils/point.js';
+import { humanizeDateTime } from '../utils/point-date-helper.js';
 
 function createEventTypeTemplate (pointTypes, selectedType) {
   return pointTypes.map((type, i) => (

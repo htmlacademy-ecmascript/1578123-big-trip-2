@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeDate, humanizeTime, getTimeDifference} from '../utils/point.js';
+import { humanizeDate, humanizeTime, getTimeDifference} from '../utils/point-date-helper.js';
 
 function createSelectedOffersTemplate (selectedOffers) {
   return selectedOffers.map(({title, price}) => (

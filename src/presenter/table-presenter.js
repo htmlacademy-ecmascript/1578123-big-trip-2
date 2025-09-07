@@ -1,106 +1,102 @@
-import { render, replace } from '../framework/render.js';
+import { render } from '../framework/render.js';
 
-import PointsListView from '../view/points-list-view.js';
 import ListSortView from '../view/list-sort-view.js';
-import PointEditView from '../view/point-edit-view.js';
-import PointView from '../view/point-view.js';
+import PointsListView from '../view/points-list-view.js';
 import NoPointsView from '../view/no-points-view.js';
 
 import { NoPointsMessage } from '../const.js';
-import { isEscapeKey } from '../utils/common.js';
+import {updateItem} from '../utils/common.js';
 
-export default class TablePresenter {
+import PointPresenter from './point-presenter.js';
+
+
+class TablePresenter {
   #tableContainer = null;
   #pointsModel = null;
   #destinationsModel = null;
   #offersModel = null;
 
   #pointsListComponent = new PointsListView();
+  #sortComponent = new ListSortView();
 
-  constructor({ container, pointsModel, destinationsModel, offersModel }) {
+  #tablePoints = [];
+  #pointTypes = [];
+  #pointPresenters = new Map();
+
+  constructor({container, pointsModel, destinationsModel, offersModel}) {
     this.#tableContainer = container;
-
     this.#pointsModel = pointsModel;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
   }
 
   init() {
+    this.#tablePoints = [...this.#pointsModel.points];
+    this.#pointTypes = [...this.#offersModel.getPointTypes()];
+
     this.#renderTable();
   }
 
-  #renderPoint({point, allDestinations, destination, availableOffers, selectedOffers, pointTypes}) {
-    const escKeyDownHandler = (evt) => {
-      if (isEscapeKey(evt)) {
-        evt.preventDefault();
-        replaceFormToItem();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
 
-    const pointComponent = new PointView({
-      point,
-      destination,
-      availableOffers,
-      selectedOffers,
-      onEditClick: () => {
-        replaceItemToForm();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
+  #handlePointChange = (updatedProperties) => {
+    this.#tablePoints = updateItem(this.#tablePoints, updatedProperties.point);
+    this.#pointPresenters.get(updatedProperties.point.id).init(updatedProperties);
+  };
+
+  #renderPoint(properties) {
+    const {point} = properties;
+    const pointPresenter = new PointPresenter({
+      pointsListContainer: this.#pointsListComponent.element,
+      onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange
     });
 
-    const pointEditComponent = new PointEditView({
-      point,
-      destination,
-      allDestinations,
-      availableOffers,
-      pointTypes,
-      onFormSubmit: () => {
-        replaceFormToItem();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      },
-      onQuitEditClick: () => {
-        replaceFormToItem();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    });
-
-    function replaceItemToForm() {
-      replace(pointEditComponent, pointComponent);
-    }
-
-    function replaceFormToItem() {
-      replace(pointComponent, pointEditComponent);
-    }
-
-    render(pointComponent, this.#pointsListComponent.element);
+    pointPresenter.init(properties);
+    this.#pointPresenters.set(point.id, pointPresenter);
   }
 
-  #renderTable() {
-    render(new ListSortView(), this.#tableContainer);
+  #renderNoPoints() {
+    render(new NoPointsView({
+      message: NoPointsMessage.EVERYTHING
+    }), this.#tableContainer);
+  }
+
+  #renderSort() {
+    render(this.#sortComponent, this.#tableContainer);
+  }
+
+  #clearPointsList() {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
+  }
+
+  #renderPointsList() {
     render(this.#pointsListComponent, this.#tableContainer);
 
-    const points = this.#pointsModel.points;
-
-    if (!points.length) {
-      render(new NoPointsView({
-        message: NoPointsMessage.EVERYTHING
-      }), this.#tableContainer);
-
-      return;
-    }
-
-    for (let i = 0; i < points.length; i++) {
-      const point = points[i];
-
+    this.#tablePoints.forEach((point) => {
       this.#renderPoint({
         point,
         allDestinations: this.#destinationsModel.destinations,
         destination: this.#destinationsModel.getDestinationById(point.destination),
         availableOffers: this.#offersModel.getOffersByType(point.type),
         selectedOffers: this.#offersModel.getOffersByIds(point.offers),
-        pointTypes: this.#offersModel.getPointTypes()
+        pointTypes: this.#pointTypes
       });
+    });
+  }
+
+  #renderTable() {
+    if (this.#tablePoints.length === 0) {
+      this.#renderNoPoints();
+      return;
     }
+
+    this.#renderSort();
+    this.#renderPointsList();
   }
 }
+
+export default TablePresenter;

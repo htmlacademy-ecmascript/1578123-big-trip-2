@@ -30,4 +30,9 @@ const FilterType = {
   PAST:'past'
 };
 
-export { POINTS_COUNT, TEST_DATE, DateFormat, BasePrice, NoPointsMessage, FilterType };
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING'
+};
+
+export { POINTS_COUNT, TEST_DATE, DateFormat, BasePrice, NoPointsMessage, FilterType, Mode };

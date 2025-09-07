@@ -1,7 +1,3 @@
-const POINTS_COUNT = 10;
-
-const TEST_DATE = '2025-10-07T07:00:00';
-
 const GAP_IN_MILLISECONDS = 3_600_000;
 
 const DefaultPoint = {
@@ -11,17 +7,17 @@ const DefaultPoint = {
 };
 
 const BLANK_POINT = {
-  'base_price': '',
-  'date_from': DefaultPoint.DATE_FROM,
-  'date_to': DefaultPoint.DATE_TO,
-  'destination': '',
-  'is_favorite': false,
-  'offers': [],
-  'type': DefaultPoint.TYPE,
-  'id': crypto.randomUUID()
+  basePrice: '',
+  dateFrom: DefaultPoint.DATE_FROM,
+  dateTo: DefaultPoint.DATE_TO,
+  destination: '',
+  isFavorite: false,
+  offers: [],
+  type: DefaultPoint.TYPE,
+  id: crypto.randomUUID()
 };
 
-const INTEGER_PATTERN = /^-?\d+$/;
+const UNVALID_BASE_PRICE_PATTERN = /\D+/;
 
 const DateFormat = {
   MONTH_DAY:'MMM D',
@@ -34,8 +30,8 @@ const DateFormat = {
 };
 
 const BasePrice = {
-  MIN: 100,
-  MAX: 9999
+  MIN: 1,
+  DEFAULT: 0
 };
 
 const FilterType = {
@@ -54,13 +50,13 @@ const NoPointsMessage = {
 
 const Mode = {
   DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING'
+  EDITING: 'EDITING',
 };
 
 const SortType = {
   DAY: 'day',
   TIME: 'time',
-  PRICE: 'price'
+  PRICE: 'price',
 };
 
 const UserAction = {
@@ -73,6 +69,32 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
-export { POINTS_COUNT, TEST_DATE, GAP_IN_MILLISECONDS, BLANK_POINT, INTEGER_PATTERN, DateFormat, BasePrice, FilterType, NoPointsMessage, Mode, SortType, UserAction, UpdateType };
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+};
+
+const Url = {
+  POINTS: 'points',
+  OFFERS: 'offers',
+  DESTINATIONS: 'destinations'
+};
+
+export {
+  DateFormat,
+  BasePrice,
+  NoPointsMessage,
+  FilterType,
+  Mode,
+  SortType,
+  GAP_IN_MILLISECONDS,
+  UserAction,
+  UpdateType,
+  BLANK_POINT,
+  UNVALID_BASE_PRICE_PATTERN,
+  Method,
+  Url
+};

@@ -2,13 +2,16 @@ const POINTS_COUNT = 10;
 
 const TEST_DATE = '2025-10-07T07:00:00';
 
+const GAP_IN_MILLISECONDS = 3_600_000;
+
 const DateFormat = {
   MONTH_DAY:'MMM D',
   HOUR_MINUTE: 'HH:mm',
   DAY_MONTH_YEAR_HOUR_MINUTE: 'DD/MM/YY HH:mm',
   DURATION_MINUTE: 'mm[M]',
   DURATION_HOUR_MINUTE: 'HH[H] mm[M]',
-  DURATION_DAY_HOUR_MINUTE: 'DD[D] HH[H] mm[M]'
+  DURATION_DAY_HOUR_MINUTE: 'DD[D] HH[H] mm[M]',
+  FLATPICKR_OUTPUT: 'd/m/y H:i'
 };
 
 const BasePrice = {
@@ -41,4 +44,4 @@ const SortType = {
   PRICE: 'price'
 };
 
-export { POINTS_COUNT, TEST_DATE, DateFormat, BasePrice, NoPointsMessage, FilterType, Mode, SortType };
+export { POINTS_COUNT, TEST_DATE, GAP_IN_MILLISECONDS, DateFormat, BasePrice, NoPointsMessage, FilterType, Mode, SortType };

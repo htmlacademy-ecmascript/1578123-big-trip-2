@@ -10,5 +10,3 @@ export const shuffleArray = (items) => {
 export const getRandomItemsArray = (items, count) => shuffleArray([...items]).slice(0, count);
 
 export const isEscapeKey = (evt) => evt.key === 'Escape';
-
-export const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);

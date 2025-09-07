@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeDateTime } from '../utils/point-date-helper.js';
+import { humanizeDateTime } from '../utils/point.js';
 
 function createEventTypeTemplate (pointTypes, selectedType) {
   return pointTypes.map((type, i) => (
@@ -179,7 +179,7 @@ class PointEditView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this.#point);
   };
 
   #editClickHandler = (evt) => {
